@@ -1,0 +1,16 @@
+{
+  "name": "chhlat-logger",
+  "version": "1.0.0",
+  "description": "Lightweight, modern logging for the console",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "author": "seanglay",
+  "keywords": ["logger", "logging", "console", "minimal", "no-deps"],
+  "license": "ISC"
+}
