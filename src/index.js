@@ -7,7 +7,7 @@ const colors = {
   reset: '\x1b[0m', gray: '\x1b[90m', blue: '\x1b[34m', yellow: '\x1b[33m', red: '\x1b[31m'
 };
 
-const loggerCore = ({level, messages, logFunction = console.log}) => {
+const loggerCore = ({ level, messages, logFunction = console.log }) => {
   let color;
   switch (level) {
     case 'INFO':
@@ -32,11 +32,11 @@ const loggerCore = ({level, messages, logFunction = console.log}) => {
 
 const logger = {
   info(...messages) {
-    loggerCore({level: 'INFO', messages});
+    loggerCore({ level: 'INFO', messages });
   }, warn(...messages) {
-    loggerCore({level: 'WARN', messages});
+    loggerCore({ level: 'WARN', messages });
   }, error(...messages) {
-    loggerCore({level: 'ERROR', messages});
+    loggerCore({ level: 'ERROR', messages });
   }
 };
 
