@@ -7,28 +7,41 @@ const colors = {
   reset: '\x1b[0m', gray: '\x1b[90m', blue: '\x1b[34m', yellow: '\x1b[33m', red: '\x1b[31m'
 };
 
-const loggerCore = ({ level, messages, logFunction = console.log }) => {
-  let color;
-  switch (level) {
-    case 'INFO':
-      color = colors.blue;
-      break;
-    case 'WARN':
-      color = colors.yellow;
-      break;
-    case 'ERROR':
-      color = colors.red;
-      break;
-    default:
-      color = colors.reset;
+// 👇 plugin storage
+const loggerPlugins = [];
+
+export const registerLoggerPlugin = (plugin) => {
+  if (typeof plugin.log !== 'function') {
+    throw new Error('Plugin must implement log(level, messages)');
   }
-
-  const formattedMessages = messages
-    .map((msg) => typeof msg === 'string' ? msg : JSON.stringify(msg, null, 2))
-    .map(indentText);
-
-  logFunction(`${colors.gray}${time()}${colors.reset}`, `${color}[${level}]${colors.reset}`, ...formattedMessages);
+  loggerPlugins.push(plugin);
 };
+
+const loggerCore = ({ level, messages }) => {
+  const formattedMessages = messages.map((msg) =>
+    typeof msg === 'string' ? msg : JSON.stringify(msg, null, 2)
+  );
+
+  // Call every registered plugin
+  for (const plugin of loggerPlugins) {
+    plugin.log(level, formattedMessages);
+  }
+};
+
+registerLoggerPlugin({
+  log(level, messages) {
+    let color;
+    switch (level) {
+      case 'INFO': color = colors.blue; break;
+      case 'WARN': color = colors.yellow; break;
+      case 'ERROR': color = colors.red; break;
+      default: color = colors.reset;
+    }
+
+    const formatted = messages.map(indentText);
+    console.log(`${colors.gray}${time()}${colors.reset}`, `${color}[${level}]${colors.reset}`, ...formatted);
+  }
+});
 
 const logger = {
   info(...messages) {
